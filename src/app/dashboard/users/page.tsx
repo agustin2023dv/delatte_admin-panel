@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IUser } from "@delatte/shared/interfaces";
-import { getUsersService } from "../../../admin.service";
+import { getUsersService } from "../../../../admin.service";
 
 export default function UsersManagement() {
   const [users, setUsers] = useState<IUser[]>([]);

@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-
-
 import Image from "next/image";
 import { IReservation, IRestaurant, IReview } from "@delatte/shared/interfaces";
 import { getReservationsByRestaurantService, 
   getRestaurantByIdService, getReviewsByRestaurantService, 
-  updateRestaurantService } from "../../../../admin.service";
+  updateRestaurantService } from "../../../../../admin.service";
 
 const RestaurantDetails = () => {
   const params = useParams(); 
