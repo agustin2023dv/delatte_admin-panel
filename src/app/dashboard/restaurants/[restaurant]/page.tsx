@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { IReservation, IRestaurant, IReview } from "@delatte/shared/interfaces";
-import { getReservationsByRestaurantService, 
-  getRestaurantByIdService, getReviewsByRestaurantService, 
-  updateRestaurantService } from "../../../../../admin.service";
+import { getRestaurantByIdService, updateRestaurantService } from "services/restaurants.service";
+import { getReservationsByRestaurantService } from "services/reservations.service";
+import { getReviewsByRestaurantService } from "services/reviews.service";
+
+
 
 const RestaurantDetails = () => {
   const params = useParams(); 
@@ -170,7 +172,7 @@ const RestaurantDetails = () => {
                   <p>Horario:{reserva.horario}</p>
                   <p><strong>Cliente:</strong> 
               {typeof reserva.usuario !== "string" && "nombre" in reserva.usuario
-                ? `${reserva.usuario.nombre} ${reserva.usuario.apellido}`
+                ? `${reserva.usuario.nombre}`
                 : "Usuario desconocido"}
                       </p>
                   <p><strong>Estado:</strong> {reserva.estado}</p>
@@ -188,7 +190,7 @@ const RestaurantDetails = () => {
                 <li key={review._id.toString()}>
                   <p><strong>Usuario:</strong> 
                   {typeof review.usuario !== "string" && "nombre" in review.usuario
-                    ? `${review.usuario.nombre} ${review.usuario.apellido}`
+                    ? `${review.usuario.nombre} `
                     : "Usuario desconocido"}
                 </p>
                   <p><strong>Calificación:</strong> {review.calificacion} ⭐</p>

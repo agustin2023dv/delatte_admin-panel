@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { IUser } from "@delatte/shared/interfaces";
-import { getUserDetailsService, updateUserService } from "../../../../../admin.service";
+import { getUserDetailsService, updateUserService } from "../../../../services/admin.service";
 
 
 export default function UserProfile() {
@@ -19,7 +19,7 @@ export default function UserProfile() {
 
     const fetchUserDetails = async () => {
       try {
-        const data = await getUserDetailsService(user as string);
+        const data = await getUserDetailsService();
         setUserDetails(data);
       } catch (error) {
         setError("Error al obtener el perfil del usuario.");
@@ -39,7 +39,7 @@ export default function UserProfile() {
   const handleUpdateUser = async () => {
     try {
       if (!userDetails?._id) return;
-      const updatedData = await updateUserService(userDetails._id.toString(), updatedUser);
+      const updatedData = await updateUserService( updatedUser);
       setUserDetails(updatedData);
       setEditMode(false);
     } catch (error) {
