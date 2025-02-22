@@ -1,6 +1,8 @@
-import API from "@/utils/api";
+import { IUser } from "@delatte/shared/interfaces";
 import axios from "axios";
+import API from "utils/api";
 import {jwtDecode} from "jwt-decode";
+
 
 const loginUser = async (endpoint: string, email: string, password: string) => {
   try {
@@ -37,7 +39,31 @@ export const loginAdminService = async (email: string, password: string) => {
   return await loginUser("/admin/login-admin", email, password);
 };
 
+
+
 export const getUsersService = async () => {
  const response = await API.get("/admin");
  return response.data;
 }
+
+export const updateUserService = async (updatedData: Partial<IUser>) => {
+  try {
+    const response = await API.put("/profile", updatedData);
+    return response.data;
+  } catch (error) {
+    console.error("Error en updateUserDataService:", error);
+    throw new Error("Error al actualizar los datos del usuario");
+  }
+};
+
+export const getUserDetailsService = async (): Promise<IUser> => {
+  try {
+    const response = await API.get("/profile");
+    return response.data;
+  } catch (error) {
+    console.error("Error en getUserDetailsService:", error);
+    throw new Error("Error al obtener los datos del usuario");
+  }
+};
+
+
