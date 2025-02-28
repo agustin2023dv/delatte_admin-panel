@@ -1,4 +1,3 @@
-
 import { IRestaurant } from "@delatte/shared/interfaces";
 import API from "utils/api";
 
@@ -12,7 +11,6 @@ export const getAllRestaurantsService = async () => {
         throw error
         }
    }
-   
    export const getRestaurantByIdService = async (restaurantId: string) => {
     try {
       const response = await API.get(`/restaurantes/${restaurantId}`);

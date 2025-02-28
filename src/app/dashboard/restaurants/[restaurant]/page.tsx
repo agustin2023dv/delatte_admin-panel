@@ -1,212 +1,133 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import Image from "next/image";
-import { IReservation, IRestaurant, IReview } from "@delatte/shared/interfaces";
-import { getRestaurantByIdService, updateRestaurantService } from "services/restaurants.service";
-import { getReservationsByRestaurantService } from "services/reservations.service";
-import { getReviewsByRestaurantService } from "services/reviews.service";
+import Image from "next/image"; 
+import { IRestaurant } from "@delatte/shared/interfaces";
+import { getRestaurantByIdService } from "services/restaurants.service";
+import Slider from "react-slick"; 
 
 
 
-const RestaurantDetails = () => {
-  const params = useParams(); 
-  const restaurantId = params.restaurant as string; 
 
-  const [restaurantDetails, setRestaurantDetails] = useState<IRestaurant | null>(null);
-  const [reservations, setReservations] = useState<IReservation[]>([]);
-  const [reviews, setReviews] = useState<IReview[]>([]);
+
+export default function RestaurantDetails() {
+  const { restaurant } = useParams();
+  console.log("ID del restaurante recibido en la vista:", restaurant);
+
+
+  const router = useRouter();
+  const [restaurantData, setRestaurantData] = useState<IRestaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [editMode, setEditMode] = useState(false);
-  const [updatedRestaurant, setUpdatedRestaurant] = useState<Partial<IRestaurant>>({});
 
   useEffect(() => {
-    if (!restaurantId) return;
-
-    const fetchRestaurantDetails = async () => {
+    const fetchRestaurant = async () => {
+      if (!restaurant) return;
       try {
-        setLoading(true);
-        setError(null);
-
-        const [restaurantData, reservationsData, reviewsData] = await Promise.all([
-          getRestaurantByIdService(restaurantId),
-          getReservationsByRestaurantService(restaurantId),
-          getReviewsByRestaurantService(restaurantId),
-        ]);
-
-        setRestaurantDetails(restaurantData);
-        setReservations(reservationsData);
-        setReviews(reviewsData);
+        const data = await getRestaurantByIdService(restaurant as string);
+        setRestaurantData(data);
       } catch (error) {
-        console.error("❌ Error al obtener detalles del restaurante:", error);
-        setError("Hubo un problema al cargar los datos del restaurante.");
+        setError("Error al obtener la información del restaurante.");
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRestaurantDetails();
-  }, [restaurantId]);
+    fetchRestaurant();
+  }, [restaurant]);
 
-  const handleInputChange = (field: keyof IRestaurant, value: string) => {
-    setUpdatedRestaurant({ ...updatedRestaurant, [field]: value });
+  if (loading) return <p>Cargando datos del restaurante...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (!restaurantData) return <p>No se encontró el restaurante.</p>;
+
+
+
+
+
+  // 📌 Configuración del carrusel
+  const sliderSettings = {
+    dots: true, // Muestra indicadores debajo del carrusel
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1, // Muestra 1 imagen a la vez
+    slidesToScroll: 1,
+    autoplay: true, // Hace que pase automáticamente
+    autoplaySpeed: 3000, // Cambia cada 3 segundos
+    arrows: true, // Flechas de navegación
   };
 
-  const handleUpdateRestaurant = async () => {
-    try {
-      if (!restaurantDetails?._id) return;
-      const updatedData = await updateRestaurantService(restaurantDetails._id.toString()
-        , updatedRestaurant);
-      setRestaurantDetails(updatedData);
-      setEditMode(false);
-    } catch (error) {
-      console.error("❌ Error al actualizar el restaurante:", error);
-    }
-  };
+
+
+
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Detalles del Restaurante</h1>
+      <h1>{restaurantData.nombre}</h1>
 
-      {loading ? (
-        <p>Cargando detalles...</p>
-      ) : error ? (
-        <p style={{ color: "red" }}>{error}</p>
-      ) : restaurantDetails ? (
-        <div>
-          <Image 
-            src={restaurantDetails.logo} 
-            alt="Logo del restaurante" 
-            width={100} 
-            height={100} 
-          />
+      <Image 
+  src={
+    restaurantData.logo && restaurantData.logo.startsWith("http") 
+      ? restaurantData.logo 
+      : "/default-restaurant.jpg"
+  }
+  alt={restaurantData.nombre} 
+  width={600} 
+  height={400}
+  style={{ objectFit: "cover", borderRadius: "8px" }}
+/>
 
-          {!editMode ? (
-            <>
-              <h2>{restaurantDetails.nombre}</h2>
-              <p><strong>Ubicación:</strong> {restaurantDetails.direccion}, {restaurantDetails.localidad}, {restaurantDetails.pais}</p>
-              <p><strong>Código Postal:</strong> {restaurantDetails.codigoPostal || "No disponible"}</p>
-              <p><strong>Calificación:</strong> {restaurantDetails.calificacion} ⭐</p>
-              <p><strong>Descripción:</strong> {restaurantDetails.descripcion || "No disponible"}</p>
-              <p><strong>Contacto:</strong> {restaurantDetails.emailContacto} | 📞 {restaurantDetails.telefono || "No disponible"}</p>
-              <button onClick={() => setEditMode(true)}>Editar</button>
-            </>
-          ) : (
-            <>
-              <input
-                type="text"
-                defaultValue={restaurantDetails.nombre}
-                onChange={(e) => handleInputChange("nombre", e.target.value)}
-              />
-              <input
-                type="text"
-                defaultValue={restaurantDetails.direccion}
-                onChange={(e) => handleInputChange("direccion", e.target.value)}
-              />
-              <input
-                type="text"
-                defaultValue={restaurantDetails.localidad}
-                onChange={(e) => handleInputChange("localidad", e.target.value)}
-              />
-              <input
-                type="text"
-                defaultValue={restaurantDetails.pais}
-                onChange={(e) => handleInputChange("pais", e.target.value)}
-              />
-              <input
-                type="text"
-                defaultValue={restaurantDetails.telefono || ""}
-                onChange={(e) => handleInputChange("telefono", e.target.value)}
-              />
-              <input
-                type="email"
-                defaultValue={restaurantDetails.emailContacto}
-                onChange={(e) => handleInputChange("emailContacto", e.target.value)}
-              />
-              <button onClick={handleUpdateRestaurant}>Guardar Cambios</button>
-              <button onClick={() => setEditMode(false)}>Cancelar</button>
-            </>
-          )}
+      <p><strong>Dirección:</strong> {restaurantData.direccion}, {restaurantData.localidad}, {restaurantData.pais}</p>
+      <p><strong>Teléfono:</strong> {restaurantData.telefono}</p>
+      <p><strong>Email:</strong> {restaurantData.emailContacto}</p>
+      <p><strong>Calificación:</strong> ⭐ {restaurantData.calificacion.toFixed(1) || "N/A"}</p>
 
-          <h3>📷 Galería de Fotos</h3>
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            {restaurantDetails.galeriaFotos?.length > 0 ? (
-              restaurantDetails.galeriaFotos.map((foto, index) => (
-                <Image key={index} src={foto} alt={`Foto ${index}`} width={100} height={100} />
-              ))
-            ) : (
-              <p>No hay fotos disponibles.</p>
-            )}
-          </div>
+      <h3>Horarios</h3>
+      <ul>
+        {restaurantData.horarios.map((horario, index) => (
+          <li key={index}>{horario.dia}: {horario.horaApertura} - {horario.horaCierre}</li>
+        ))}
+      </ul>
 
-          <h3>📅 Horarios</h3>
-          <ul>
-            {restaurantDetails.horarios?.length > 0 ? (
-              restaurantDetails.horarios.map((horario, index) => (
-                <li key={index}>{horario.dia}: {horario.horaApertura} - {horario.horaCierre}</li>
-              ))
-            ) : (
-              <p>No hay horarios definidos.</p>
-            )}
-          </ul>
+      <h3>Capacidad de Mesas</h3>
+      <ul>
+        {restaurantData.capacidadMesas.map((mesa, index) => (
+          <li key={index}>{mesa.cantidad} mesas de {mesa.personasPorMesa} personas</li>
+        ))}
+      </ul>
 
-          <h3>📋 Capacidad de Mesas</h3>
-          <ul>
-            {restaurantDetails.capacidadMesas?.length > 0 ? (
-              restaurantDetails.capacidadMesas.map((mesa, index) => (
-                <li key={index}>{mesa.cantidad} mesas de {mesa.personasPorMesa} personas</li>
-              ))
-            ) : (
-              <p>No hay información sobre la capacidad de mesas.</p>
-            )}
-          </ul>
 
-          <h2>📌 Reservas</h2>
-          {reservations.length > 0 ? (
-            <ul>
-              {reservations.map((reserva) => (
-                <li key={reserva._id.toString()}>
-                  <p><strong>Fecha:</strong> {new Intl.DateTimeFormat("es-ES").format(new Date(reserva.fecha))}</p>
-                  <p>Horario:{reserva.horario}</p>
-                  <p><strong>Cliente:</strong> 
-              {typeof reserva.usuario !== "string" && "nombre" in reserva.usuario
-                ? `${reserva.usuario.nombre}`
-                : "Usuario desconocido"}
-                      </p>
-                  <p><strong>Estado:</strong> {reserva.estado}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No hay reservas disponibles.</p>
-          )}
-
-          <h2>📝 Reviews</h2>
-          {reviews.length > 0 ? (
-            <ul>
-              {reviews.map((review) => (
-                <li key={review._id.toString()}>
-                  <p><strong>Usuario:</strong> 
-                  {typeof review.usuario !== "string" && "nombre" in review.usuario
-                    ? `${review.usuario.nombre} `
-                    : "Usuario desconocido"}
-                </p>
-                  <p><strong>Calificación:</strong> {review.calificacion} ⭐</p>
-                  <p><strong>Comentario:</strong> {review.comentario}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No hay reviews disponibles.</p>
-          )}
+     {/* 📌 Carrusel de Galería de Fotos */}
+     {restaurantData.galeriaFotos && restaurantData.galeriaFotos.length > 0 ? (
+        <div style={{ maxWidth: "600px", margin: "20px auto" }}>
+          <h3>Galería de Fotos</h3>
+          <Slider {...sliderSettings}>
+            {restaurantData.galeriaFotos.map((foto, index) => (
+              <div key={index}>
+                <Image 
+                  src={foto} 
+                  alt={`Foto ${index + 1}`} 
+                  width={600} 
+                  height={400} 
+                  style={{ borderRadius: "8px", objectFit: "cover" }}
+                />
+              </div>
+            ))}
+          </Slider>
         </div>
       ) : (
-        <p>No se encontraron detalles del restaurante.</p>
+        <p style={{ color: "gray" }}>No hay fotos en la galería.</p>
       )}
+
+
+      <button
+        onClick={() => router.push(`/dashboard/restaurants/${restaurant}/edit`)}
+        style={{ padding: "10px 15px", backgroundColor: "blue", color: "white", borderRadius: "5px", border: "none", cursor: "pointer" }}
+      >
+        Editar Restaurante
+      </button>
     </div>
   );
-};
-
-export default RestaurantDetails;
+}
