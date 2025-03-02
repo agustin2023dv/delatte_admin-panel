@@ -14,7 +14,6 @@ import Slider from "react-slick";
 
 export default function RestaurantDetails() {
   const { restaurant } = useParams();
-  console.log("ID del restaurante recibido en la vista:", restaurant);
 
 
   const router = useRouter();
@@ -120,6 +119,23 @@ export default function RestaurantDetails() {
       ) : (
         <p style={{ color: "gray" }}>No hay fotos en la galería.</p>
       )}
+
+
+<button
+        onClick={() => router.push(`/dashboard/restaurants/${restaurant}/reservations`)}
+        style={{ margin: "10px", padding: "10px", backgroundColor: "blue", color: "white" }}
+      >
+        Ver Reservas
+      </button>
+
+      <button
+        onClick={() => router.push(`/dashboard/restaurants/${restaurant}/reviews`)}
+        style={{ margin: "10px", padding: "10px", backgroundColor: "green", color: "white" }}
+      >
+        Ver Reseñas
+      </button>
+
+
 
 
       <button
