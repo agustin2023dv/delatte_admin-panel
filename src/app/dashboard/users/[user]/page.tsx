@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { IUser } from "@delatte/shared/interfaces";
-import { getUserDetailsService, updateUserService } from "../../../../services/admin.service";
-
+import { getUserDetailsService } from "../../../../services/admin.service";
+import Image from "next/image";
 
 export default function UserProfile() {
   const { user } = useParams();
+  const router = useRouter();
   const [userDetails, setUserDetails] = useState<IUser | null>(null);
-  const [editMode, setEditMode] = useState(false);
-  const [updatedUser, setUpdatedUser] = useState<Partial<IUser>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +18,7 @@ export default function UserProfile() {
 
     const fetchUserDetails = async () => {
       try {
-        const data = await getUserDetailsService();
+        const data = await getUserDetailsService(user as string);
         setUserDetails(data);
       } catch (error) {
         setError("Error al obtener el perfil del usuario.");
@@ -32,22 +31,6 @@ export default function UserProfile() {
     fetchUserDetails();
   }, [user]);
 
-  const handleInputChange = (field: keyof IUser, value: string) => {
-    setUpdatedUser({ ...updatedUser, [field]: value });
-  };
-
-  const handleUpdateUser = async () => {
-    try {
-      if (!userDetails?._id) return;
-      const updatedData = await updateUserService( updatedUser);
-      setUserDetails(updatedData);
-      setEditMode(false);
-    } catch (error) {
-      setError("Error al actualizar usuario.");
-      console.log(error);
-    }
-  };
-
   return (
     <div style={{ padding: "20px" }}>
       <h2>Perfil del Usuario</h2>
@@ -58,23 +41,76 @@ export default function UserProfile() {
         <p style={{ color: "red" }}>{error}</p>
       ) : userDetails ? (
         <div>
-          {!editMode ? (
-            <>
-              <p><strong>Nombre:</strong> {userDetails.nombre} {userDetails.apellido}</p>
-              <p><strong>Email:</strong> {userDetails.email}</p>
-              <button onClick={() => setEditMode(true)}>Editar</button>
-            </>
-          ) : (
-            <>
-              <input type="text" defaultValue={userDetails.nombre} onChange={(e) => handleInputChange("nombre", e.target.value)} />
-              <input type="text" defaultValue={userDetails.apellido} onChange={(e) => handleInputChange("apellido", e.target.value)} />
-              <button onClick={handleUpdateUser}>Guardar Cambios</button>
-              <button onClick={() => setEditMode(false)}>Cancelar</button>
-            </>
-          )}
+          {/* Imagen de perfil */}
+          <div style={{ marginBottom: "15px" }}>
+  <label><strong>Foto de Perfil:</strong></label>
+  <Image
+    src={userDetails.profileImage && userDetails.profileImage.startsWith("http") 
+      ? userDetails.profileImage 
+      : "/default-restaurant.jpg"} 
+    alt="Imagen de perfil"
+    width={100}
+    height={100}
+    style={{ borderRadius: "50%", marginLeft: "10px" }}
+    priority
+  />
+</div>
+
+          {/* Nombre y Apellido */}
+          <p>
+            <strong>Nombre:</strong> {userDetails.nombre} {userDetails.apellido}
+          </p>
+
+          {/* Email */}
+          <p>
+            <strong>Email:</strong> {userDetails.email}
+          </p>
+
+          {/* Teléfono */}
+          <p>
+            <strong>Teléfono:</strong> {userDetails.phone || "No disponible"}
+          </p>
+
+          {/* Rol */}
+          <p>
+            <strong>Rol:</strong> {userDetails.role === "customer"
+              ? "Cliente"
+              : userDetails.role === "manager"
+              ? "Manager"
+              : "Superadmin"}
+          </p>
+
+          {/* Botones */}
+          <button
+            onClick={() => router.push(`/dashboard/users/${user}/reservations`)}
+            style={{ margin: "10px", padding: "10px", backgroundColor: "blue", color: "white" }}
+          >
+            Ver Reservas
+          </button>
+
+          <button
+            onClick={() => router.push(`/dashboard/users/${user}/reviews`)}
+            style={{ margin: "10px", padding: "10px", backgroundColor: "green", color: "white" }}
+          >
+            Ver Reseñas
+          </button>
+
+          <button
+            onClick={() => router.push(`/dashboard/users/${user}/edit`)}
+            style={{
+              padding: "10px 15px",
+              backgroundColor: "blue",
+              color: "white",
+              borderRadius: "5px",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Editar Usuario
+          </button>
         </div>
       ) : (
-        <p>No se encontraron datos del usuario.</p>
+        <p>No se encontró el usuario.</p>
       )}
     </div>
   );

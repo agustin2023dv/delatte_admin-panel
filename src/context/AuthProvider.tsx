@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { IUser } from "@delatte/shared/interfaces"; // Importa la interfaz IUser desde tu paquete compartido
+import { IUser } from "@delatte/shared/interfaces"; 
 
 // Definición del tipo para el contexto de autenticación
 interface AuthContextType {
-  user: IUser | null; // Usa la interfaz IUser para tipar el usuario
+  user: IUser | null; 
   login: (userData: IUser) => void;
   logout: () => void;
   isAuthenticated: boolean;
@@ -12,7 +12,7 @@ interface AuthContextType {
 // Crear el contexto de autenticación
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Hook personalizado para usar el contexto de autenticación
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

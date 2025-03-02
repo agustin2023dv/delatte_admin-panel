@@ -39,7 +39,7 @@ export default function UsersManagement() {
           {users.map((user) => (
             <li key={user._id.toString()}>
               {user.nombre} {user.apellido} - {user.email}
-              <Link href={`/users/${user._id}`} style={{ marginLeft: "10px", color: "blue" }}>
+              <Link href={`/dashboard/users/${user._id}`} style={{ marginLeft: "10px", color: "blue" }}>
                 Ver más
               </Link>
             </li>
