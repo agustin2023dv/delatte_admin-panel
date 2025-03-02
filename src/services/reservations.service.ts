@@ -13,7 +13,7 @@ export const getReservationsByRestaurantService = async (restaurantId: string) =
   }
 } 
 
-export const getReservationByIdService = async (reservationId: string): Promise<IReservation> => {
+export const getReservationByIdService = async (reservationId: string)=> {
  
     try {
       const response = await API.get(`/reservas/${reservationId}`)
@@ -34,7 +34,7 @@ export const getReservationByIdService = async (reservationId: string): Promise<
       numNinos: number;
       pedidosEspeciales?: string;
     }
-  ): Promise<void> => {
+  ) => {
     try {
       const response = await API.post(
         `/reservas/create-reservation`,
@@ -48,7 +48,7 @@ export const getReservationByIdService = async (reservationId: string): Promise<
   };
   
   // Cancelar una reserva
-  export const cancelReservationService = async (reservationId: string): Promise<IReservation> => {
+  export const cancelReservationService = async (reservationId: string)=> {
     try {
       const response = await API.put(
         `/reservas/cancelar/${reservationId}`,
@@ -64,7 +64,7 @@ export const getReservationByIdService = async (reservationId: string): Promise<
   export const modifyReservationService = async (
     reservationId: string,
     updatedData: Partial<IReservation>
-  ): Promise<IReservation> => {
+  )=> {
     try {
       const response = await API.put(
         `/reservas/modificar/${reservationId}`,
@@ -77,3 +77,13 @@ export const getReservationByIdService = async (reservationId: string): Promise<
     }
   };
   
+
+  export const getUserReservationsService = async (userId: string) => {
+    try {
+      const response = await API.get(`/reservas/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener reservas del usuario:", error);
+      throw new Error("No se pudieron cargar las reservas del usuario.");
+    }
+  };

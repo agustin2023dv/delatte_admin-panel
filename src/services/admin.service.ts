@@ -46,9 +46,9 @@ export const getUsersService = async () => {
  return response.data;
 }
 
-export const updateUserService = async (updatedData: Partial<IUser>) => {
+export const updateUserService = async (userId: string,updatedData: Partial<IUser>) => {
   try {
-    const response = await API.put("/profile", updatedData);
+    const response = await API.put(`/admin/${userId}/update`, updatedData);
     return response.data;
   } catch (error) {
     console.error("Error en updateUserDataService:", error);
@@ -56,9 +56,9 @@ export const updateUserService = async (updatedData: Partial<IUser>) => {
   }
 };
 
-export const getUserDetailsService = async (): Promise<IUser> => {
+export const getUserDetailsService = async (userId: string) => {
   try {
-    const response = await API.get("/profile");
+    const response = await API.get(`/admin/${userId}`);
     return response.data;
   } catch (error) {
     console.error("Error en getUserDetailsService:", error);
@@ -66,4 +66,13 @@ export const getUserDetailsService = async (): Promise<IUser> => {
   }
 };
 
+export const getUserByIDService = async (userId : string) => {
+  try {
+    const response = await API.get(`/profile/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener usuario por ID:", error);
+    throw error;
+  }
+};
 
