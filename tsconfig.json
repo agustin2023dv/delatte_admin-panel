@@ -25,6 +25,6 @@
   },
   "include": ["next-env.d.ts", "src/**/*.ts",
   "**/*.ts", "**/*.tsx", ".next/types/**/*.ts",
-"types/**/*.d.ts", "next.config.js"],
+"types/**/*.d.ts", "next.config.js", "src/app/dashboard/reservations/[id]"],
   "exclude": ["node_modules"]
 }
