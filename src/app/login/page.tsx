@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { signIn } from "next-auth/react"; // Para Google Auth
+import { signIn } from "next-auth/react"; 
 import { loginAdminService } from "services/admin.service";
 
 export default function Login() {

@@ -1,5 +1,15 @@
 import API from "utils/api";
 
+
+export const getAllReviewsService = async()=> {
+  try {
+    const response = await API.get(`/resenas`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener reviews:", error);
+    throw error;
+  }
+}
 export const getReviewsByRestaurantService = async (restaurantId: string) => {
     try {
       const response = await API.get(`/resenas/restaurant/${restaurantId}`);
@@ -20,7 +30,17 @@ export const getReviewsByRestaurantService = async (restaurantId: string) => {
     }
   };
 
-export const deleteReviewService = async (reviewId: string) => {
+  export const getReviewByIdService = async (id: string) => {
+    try {
+      const response = await API.get(`/resenas/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener reviews:", error);
+      throw error;
+    }
+  };
+
+export const deleteReviewByIdService = async (reviewId: string) => {
   try {
     await API.delete(`/resenas/${reviewId}/delete`);
     return true;

@@ -2,6 +2,28 @@
 import { IReservation } from "@delatte/shared/interfaces";
 import API from "utils/api";
 
+/**
+ * Servicio para crear una nueva reserva
+ */
+export const createReservationService = async (reservationData: Partial<IReservation>) => {
+  try {
+    const response = await API.post("/reservas/", reservationData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear la reserva:", error);
+    throw error;
+  }
+};
+
+export const getAllReservationsService = async () => {
+  try {
+    const response = await API.get(`/reservas/all-reservations`)
+    return response.data; 
+  } catch (error) {
+    console.error('Error al obtener las reservas:', error);
+      throw error;
+  }
+} 
 
 export const getReservationsByRestaurantService = async (restaurantId: string) => {
   try {
@@ -24,28 +46,7 @@ export const getReservationByIdService = async (reservationId: string)=> {
     }
   };
   
-  // Crear una nueva reserva
-  export const createReservationService = async (
-    reservationData: {
-      restaurante: string;
-      fecha: string;
-      horario: string;
-      numAdultos: number;
-      numNinos: number;
-      pedidosEspeciales?: string;
-    }
-  ) => {
-    try {
-      const response = await API.post(
-        `/reservas/create-reservation`,
-        reservationData,
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error al crear la reserva:", error);
-      throw error;
-    }
-  };
+
   
   // Cancelar una reserva
   export const cancelReservationService = async (reservationId: string)=> {
