@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IRestaurant } from "@delatte/shared/interfaces";
-import { getAllRestaurantsService } from "services/restaurants.service";
+import { getAllRestaurantsService } from "services/restaurants/restaurants.service";
 
 export default function RestaurantsManagement() {
   const [restaurants, setRestaurants] = useState<IRestaurant[]>([]);

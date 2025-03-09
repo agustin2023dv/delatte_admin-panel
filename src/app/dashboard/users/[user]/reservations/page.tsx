@@ -7,7 +7,7 @@ import {
   getUserReservationsService,
   cancelReservationService,
   modifyReservationService,
-} from "services/reservations.service";
+} from "services/reservations/reservations.service";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

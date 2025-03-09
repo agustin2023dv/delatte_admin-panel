@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { IReservation } from "@delatte/shared/interfaces";
-import { getReservationByIdService, modifyReservationService, cancelReservationService } from "services/reservations.service";
+import { getReservationByIdService, modifyReservationService, cancelReservationService } from "services/reservations/reservations.service";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

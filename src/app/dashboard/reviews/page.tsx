@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAllReviewsService } from "services/reviews.service";
+import { getAllReviewsService } from "services/reviews/reviews.service";
 import { IReview } from "@delatte/shared/interfaces";
 
 const ReviewsPage = () => {

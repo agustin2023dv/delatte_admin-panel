@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getReservationsByRestaurantService } from "services/reservations.service";
+import { getReservationsByRestaurantService } from "services/reservations/reservations.service";
 import { IReservation } from "@delatte/shared/interfaces";
 
 export default function RestaurantReservations() {

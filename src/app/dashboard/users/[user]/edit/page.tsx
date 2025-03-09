@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { IUser } from "@delatte/shared/interfaces";
 import Image from "next/image";
-import { getUserDetailsService, updateUserService } from "services/admin.service";
+import { getUserDetailsService, updateUserService } from "services/admin/adminUsers.service";
 import { uploadUserProfile } from "components/UploadUserPhoto";
 
 export default function EditUser() {

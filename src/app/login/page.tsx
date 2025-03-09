@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react"; 
-import { loginAdminService } from "services/admin.service";
+import { loginAdminService } from "services/admin/adminUsers.service";
 
 export default function Login() {
   const router = useRouter();

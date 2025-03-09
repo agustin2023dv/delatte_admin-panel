@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { IUser } from "@delatte/shared/interfaces";
-import { getUserDetailsService } from "../../../../services/admin.service";
+import { getUserDetailsService } from "../../../../services/admin/adminUsers.service";
 import Image from "next/image";
 
 export default function UserProfile() {

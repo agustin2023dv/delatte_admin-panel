@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import Image from "next/image"; 
 import { IRestaurant } from "@delatte/shared/interfaces";
-import { getRestaurantByIdService } from "services/restaurants.service";
+import { getRestaurantByIdService } from "services/restaurants/restaurants.service";
 import Slider from "react-slick"; 
 
 

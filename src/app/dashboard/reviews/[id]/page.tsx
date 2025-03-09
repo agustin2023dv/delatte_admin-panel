@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IReview } from "@delatte/shared/interfaces";
-import { deleteReviewByIdService, getReviewByIdService } from "services/reviews.service";
+import { deleteReviewByIdService, getReviewByIdService } from "services/reviews/reviews.service";
 
 const ReviewDetailsPage = () => {
   const [review, setReview] = useState<IReview | null>(null);

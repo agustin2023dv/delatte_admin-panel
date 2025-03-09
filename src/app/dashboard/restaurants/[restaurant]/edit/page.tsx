@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { IRestaurant } from "@delatte/shared/interfaces";
-import { getRestaurantByIdService, updateRestaurantService } from "services/restaurants.service";
+import { getRestaurantByIdService, updateRestaurantService } from "services/restaurants/restaurants.service";
 import { handleUpload } from "components/UploadImage"; 
 
 import Image from "next/image";

@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAllReservationsService, createReservationService } from "services/reservations.service";
-import { getAllRestaurantsService } from "services/restaurants.service"; 
+import { getAllReservationsService, createReservationService } from "services/reservations/reservations.service";
+import { getAllRestaurantsService } from "services/restaurants/restaurants.service"; 
 import { IReservation, IRestaurant } from "@delatte/shared/interfaces";
 import { toast } from "react-toastify";
-import { getUsersService } from "services/admin.service";
+import { getUsersService } from "services/admin/adminUsers.service";
 
 export default function ReservationsPage() {
   const router = useRouter();

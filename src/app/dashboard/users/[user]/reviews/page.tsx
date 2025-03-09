@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { IReview } from "@delatte/shared/interfaces";
-import { getReviewsByUserService, deleteReviewService } from "services/reviews.service";
+import { getReviewsByUserService, deleteReviewService } from "services/reviews/reviews.service";
 
 export default function UserReviews() {
   const { user } = useParams();

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { IReview } from "@delatte/shared/interfaces";
-import { getReviewsByRestaurantService, deleteReviewService } from "services/reviews.service";
+import { getReviewsByRestaurantService, deleteReviewService } from "services/reviews/reviews.service";
 
 export default function RestaurantReviews() {
   const { restaurant } = useParams();
