@@ -1,5 +1,6 @@
 "use client"
 
+import "./globals.css";
 import { AuthProvider } from "context/AuthProvider";
 import React from "react";
 

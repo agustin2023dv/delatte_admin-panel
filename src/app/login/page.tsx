@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { signIn } from "next-auth/react"; 
+import { signIn } from "next-auth/react";
 import { loginAdminService } from "services/admin/adminUsers.service";
 
 export default function Login() {
@@ -20,12 +20,11 @@ export default function Login() {
     const password = formData.get("password") as string;
 
     try {
-      // 🔹 Intentar iniciar sesión con credenciales
       const { token, user } = await loginAdminService(email, password);
 
       if (token && user) {
         console.log("✅ Login exitoso con credenciales:", user);
-        router.push("/dashboard"); // Redirigir al dashboard
+        router.push("/dashboard");
       } else {
         setError("Credenciales incorrectas.");
       }
@@ -38,37 +37,105 @@ export default function Login() {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Admin Login</h2>
-      
-      {/* 🔹 Formulario para login con email y password */}
-      <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="password" name="password" placeholder="Password" required />
-        <button type="submit" disabled={loading}>
+    <div style={styles.container}>
+      <h2 style={styles.title}>Iniciar Sesión</h2>
+
+      <form style={styles.form} onSubmit={handleSubmit}>
+        <input type="email" name="email" placeholder="Email" required style={styles.input} />
+        <input type="password" name="password" placeholder="Contraseña" required style={styles.input} />
+
+        <button type="submit" disabled={loading} style={styles.button}>
           {loading ? "Cargando..." : "Iniciar sesión"}
         </button>
       </form>
 
-      <hr style={{ margin: "20px 0" }} />
+      <hr style={styles.hr} />
 
-      {/* 🔹 Botón para login con Google */}
       <button
         onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-        style={{
-          padding: "10px",
-          backgroundColor: "#4285F4",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          width: "100%",
-        }}
+        style={styles.googleButton}
       >
+
+        <img
+          src="/google-icon.png"
+          alt="Google Logo"
+          style={{ width: 20, height: 20, marginRight: 8 }}
+        />
         Iniciar sesión con Google
       </button>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={styles.error}>{error}</p>}
     </div>
   );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    minHeight: "100vh",
+    backgroundColor: "#e7ded9", 
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px",
+  },
+  form: {
+    width: "35%",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    backgroundColor: "#fff", 
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: "24px",
+    color: "#271207", 
+    marginBottom: "20px",
+    textAlign: "center",
+  },
+  input: {
+    width: "100%",
+    height: "40px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    padding: "0 10px",
+  },
+  button: {
+    backgroundColor: "#a5744b",
+    color: "#fff",
+    padding: "12px 20px",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "16px",
+    textAlign: "center",
+    marginTop: "10px",
+  },
+  googleButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffff",
+    color: "#a5744b",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    width: "35%",
+    padding: "12px",
+    marginTop: "10px",
+    fontSize: "16px",
+    fontWeight: 600,
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+  },
+  error: {
+    color: "red",
+    marginTop: "10px",
+  },
+  hr: {
+    margin: "20px 0",
+    width: "35%",
+  },
+};
